@@ -1,0 +1,348 @@
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #111827;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+  }
+  
+  .modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+ /* Styling the scroll container */
+.column-container {
+    max-height: 400px;
+    overflow-y: auto;
+    /* Optional: add padding to prevent content from touching edges */
+    padding-right: 10px;
+    box-sizing: content-box;  /* Adjust for the padding */
+  }
+  
+  /* Styling for the scrollbar */
+  .column-container::-webkit-scrollbar {
+    width: 8px; /* width of the vertical scrollbar */
+  }
+  
+  .column-container::-webkit-scrollbar-track {
+    background: #333;  /* Dark background for the scrollbar track */
+    border-radius: 10px;
+  }
+  
+  .column-container::-webkit-scrollbar-thumb {
+    background: #555;  /* Darker thumb (the draggable part) */
+    border-radius: 10px;
+  }
+  
+  .column-container::-webkit-scrollbar-thumb:hover {
+    background: #888;  /* Lighter thumb when hovering */
+  }
+  
+  /* Optional: Remove scrollbar if not needed */
+  .column-container::-webkit-scrollbar:empty {
+    display: none;
+  }
+  
+  
+  #contentArea {
+    min-height: 400px;
+    transition: opacity 0.3s ease;
+  }
+  
+  #contentArea.loading {
+    opacity: 0.5;
+  }
+  
+  .chat-message {
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  
+  .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.card-title i {
+  width: 24px;
+  height: 24px;
+  color: var(--blue-500);
+}
+
+.db-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.db-button {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--border-color);
+  background-color: rgba(55, 65, 81, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.db-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.mysql:hover { border-color: var(--blue-500); }
+.postgresql:hover { border-color: #6366F1; }
+.cassandra:hover { border-color: var(--green-500); }
+.mongodb:hover { border-color: #34D399; }
+
+.db-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: center;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.info-card {
+  background-color: rgba(55, 65, 81, 0.5);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.info-header h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.icon-blue { color: var(--blue-500); }
+.icon-green { color: var(--green-500); }
+.icon-purple { color: var(--purple-500); }
+
+.storage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.storage-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background-color: #4B5563;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--green-500);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.system-info {
+  color: var(--text-secondary);
+}
+
+.system-info p {
+  margin-bottom: 0.25rem;
+}
+
+.chart-container {
+  position: relative;
+  height: 400px;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+canvas#dbChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.action-button i {
+  width: 20px;
+  height: 20px;
+}
+
+.primary {
+  background-color: var(--blue-500);
+  color: white;
+}
+
+.primary:hover {
+  background-color: #2563EB;
+  transform: translateY(-1px);
+}
+
+.secondary {
+  background-color: var(--green-500);
+  color: white;
+}
+
+.secondary:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+   :root {
+  --bg-dark: #111827;
+  --card-bg: #1F2937;
+  --card-hover: #374151;
+  --text-primary: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --blue-500: #3B82F6;
+  --green-500: #10B981;
+  --purple-500: #8B5CF6;
+  --border-color: #374151;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.5;
+  padding: 1.5rem;
+  min-height: 100vh;	
+}
+
+
+:root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --background: #111827;
+    --text: #ffffff;
+}
+
+.loading-s {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.spinner {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.spinner-icon {
+    position: absolute;
+    inset: 0;
+    border: 4px solid rgba(59, 130, 246, 0.2);
+    border-top-color: var(--primary);
+    border-right-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+.db-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 48px;
+    height: 48px;
+    color: var(--primary);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.hidden {
+    display: none;
+}
+
+.container {
+    text-align: center;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

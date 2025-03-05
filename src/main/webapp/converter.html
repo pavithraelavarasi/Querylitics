@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Query Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-gray-900 text-white">
+  <main class="max-w-6xl mx-auto px-4 py-8">
+<div class="text-left mb-8 ml-4">
+  <h1 class="text-3xl font-bold text-white mb-2 flex items-center gap-2">
+    <i data-lucide="database" class="h-8 w-8 text-blue-400"></i> <!-- Added icon -->
+    Database Query Converter
+  </h1>
+  <p class="text-gray-400">Easily convert between different database query formats</p>
+</div>
+
+    <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+      <!-- Rest of the content remains unchanged -->
+      <div class="flex items-center gap-4 mb-4">
+        <div class="flex-1">
+          <select id="sourceDb" class="w-full bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500">
+            <option value="mysql">MySQL</option>
+            <option value="postgresql">PostgreSQL</option>
+            <option value="mongodb">MongoDB</option>
+            <option value="cassandra">Cassandra</option>
+          </select>
+        </div>
+
+        <button id="swapBtn" class="p-2 rounded-full hover:bg-gray-700 transition-colors" title="Swap databases">
+          <i data-lucide="arrow-right-left" class="h-5 w-5"></i>
+        </button>
+
+        <div class="flex-1">
+          <select id="targetDb" class="w-full bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500">
+            <option value="postgresql">PostgreSQL</option>
+            <option value="mysql">MySQL</option>
+            <option value="mongodb">MongoDB</option>
+            <option value="cassandra">Cassandra</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="relative">
+          <textarea
+            id="sourceQuery"
+            placeholder="Enter your query here..."
+            class="w-full h-64 bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 resize-none"
+          ></textarea>
+          <button onclick="copyToClipboard('sourceQuery')" class="absolute bottom-2 right-2 p-2 rounded-full hover:bg-gray-600 transition-colors" title="Copy to clipboard">
+            <i data-lucide="copy" class="h-4 w-4"></i>
+          </button>
+        </div>
+
+        <div class="relative">
+          <textarea
+            id="convertedQuery"
+            readonly
+            placeholder="Converted query will appear here..."
+            class="w-full h-64 bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 resize-none"
+          ></textarea>
+          <button onclick="copyToClipboard('convertedQuery')" class="absolute bottom-2 right-2 p-2 rounded-full hover:bg-gray-600 transition-colors" title="Copy to clipboard">
+            <i data-lucide="copy" class="h-4 w-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-center">
+        <button id="convert"
+          class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          onclick="convertQuery()"
+        >
+          Convert Query
+        </button>
+      </div>
+    </div>
+
+    <!-- Examples Section -->
+    <div class="mt-12 bg-gray-800 rounded-lg shadow-xl p-6">
+      <h2 class="text-2xl font-semibold text-white mb-6">Query Conversion Examples</h2> <!-- Changed text-blue-400 to text-white -->
+      
+      <div class="space-y-8">
+        <!-- MySQL to PostgreSQL -->
+        <div class="bg-gray-700 p-4 rounded-md">
+          <h3 class="text-lg font-medium text-white mb-3">MySQL to PostgreSQL</h3> <!-- Alignment handled by parent div -->
+          <div class="grid grid-cols-2 gap-4 border border-gray-600 p-2 rounded-md">
+            <div class="border-r border-gray-600 pr-4">
+              <p class="text-blue-400 mb-2" id="fromdb">MySQL:</p>
+              <code class="text-gray-300" id="fromQuery">
+                SELECT * FROM users<br>
+                LIMIT 10 OFFSET 20;
+              </code>
+            </div>
+            <div class="pl-4">
+              <p class="text-green-400 mb-2" id="todb">PostgreSQL:</p>
+              <code class="text-gray-300" id="toQuery">
+                SELECT * FROM users<br>
+                OFFSET 20 LIMIT 10;
+              </code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+ <script src="converter.js"></script>
+</body>
+</html>

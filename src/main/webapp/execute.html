@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DB Analyzer - Execute Query</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="execute.css">
+  <style>
+    .loading { filter: blur(5px); }
+    #loaderOverlay { display: none; }
+    #loaderOverlay.show { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <!-- Loader Overlay -->
+  <div id="loaderOverlay">
+    <iframe id="chartLoader" src="loader.html" width="100%" height="1400px" scrolling="no"></iframe>
+  </div>
+
+  <div class="min-h-screen bg-[#1a1f2e] p-8" id="mainContent">
+    <div class="max-w-6xl mx-auto space-y-8">
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-6">
+        <i data-lucide="table" class="w-8 h-8 text-blue-400"></i>
+        <h1 class="text-3xl font-bold text-white">Query Executer</h1>
+      </div>
+      
+      <!-- Results Grid -->
+      <div id="databaseGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Database cards will be inserted here -->
+      </div>
+
+      <!-- Query Form -->
+      <form id="queryForm" class="bg-[#232936] rounded-lg shadow-xl p-6">
+        <div class="space-y-6">
+          <div class="flex items-start space-x-2">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-1"></i>
+            <p class="text-sm text-gray-300">
+              Select a database, table, and enter your query below.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="dbName" class="block text-sm font-medium text-gray-300 mb-1">
+                Database Name
+              </label>
+              <select
+                id="dbName"
+                class="w-full px-4 py-2 rounded-lg border border-[#2a3241] bg-[#1a1f2e] text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="mysql">Mysql</option>
+                <option value="postgresql">PostgresSql</option>
+                <option value="Cassandra">Cassandra DB</option>
+                <option value="MongoDB">Mongo DB</option>
+              </select>
+            </div>
+            
+            <div>
+              <div class="block text-sm font-medium text-gray-300 mb-1">
+                Table Name
+              </div>
+              <div id="tableName" class="w-full px-4 py-2 rounded-lg border border-[#2a3241] bg-[#1a1f2e] text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+            </div>
+          </div>
+
+          <label for="query" class="block text-sm font-medium text-gray-300 mb-1">
+            Query
+          </label>
+          <textarea
+            id="query"
+            placeholder="Enter your SQL query here..."
+            class="w-full h-32 px-4 py-3 rounded-lg border border-[#2a3241] bg-[#1a1f2e] text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono"
+          ></textarea>
+
+          <div class="flex flex-col space-y-4 p-6">
+            <!-- Error Result -->
+            <div id="errorArea" class="hidden">
+              <div class="w-full p-5 bg-[#251c1e] text-gray-300 rounded-lg shadow-md border border-[#FF4D4D] bg-opacity-50 transition-all duration-200">
+                <div class="flex items-start space-x-3">
+                  <i data-lucide="alert-triangle" class="w-6 h-6 text-[#FF4D4D] flex-shrink-0 animate-pulse"></i>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-[#FF4D4D] mb-2">Query Error</h3>
+                    <p id="errorMessage" class="text-sm text-gray-400 font-mono"></p>
+                    <div id="errorLocation" class="hidden mt-4 flex items-center space-x-2 text-xs text-gray-500">
+                      <i data-lucide="file-code" class="w-4 h-4"></i>
+                      <span>Line: <span id="errorLine" class="font-mono"></span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Success Result -->
+            <div id="successArea" class="hidden">
+              <div class="w-full p-5 bg-[#1A201E] text-gray-300 rounded-lg shadow-md border border-[#16a34a] bg-opacity-50 transition-all duration-200">
+                <div class="flex items-start space-x-3">
+                  <i data-lucide="check-circle" class="w-6 h-6 text-[#16a34a] flex-shrink-0 animate-bounce"></i>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-[#16a34a] mb-2">Query Executed Successfully</h3>
+                    <div class="flex items-center space-x-4 text-sm">
+                      <div class="flex items-center space-x-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                        <span class="text-gray-400">Execution Time: <span id="executionTime" class="font-mono text-white"></span></span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <i data-lucide="database" class="w-4 h-4 text-gray-400"></i>
+                        <span class="text-gray-400">Rows Affected: <span id="rowsAffected" class="font-mono text-white">0</span></span>
+                      </div>
+                    </div>
+                    <div id="resultData" class="mt-4 overflow-x-auto">
+                      <!-- Query results table will be inserted here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Execute Button -->
+            <div class="flex justify-start">
+              <button 
+                type="submit"
+                class="group px-5 py-3 bg-[#16a34a] text-white rounded-lg hover:bg-[#15803d] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-[#1a1f2e] transition-all duration-200 flex items-center justify-center space-x-2"
+              >
+                <span>Execute Query</span>
+                <i data-lucide="play" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="execute.js" defer></script>
+</body>
+</html>

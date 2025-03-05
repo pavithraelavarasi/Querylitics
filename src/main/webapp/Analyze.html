@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database & Project Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    #queryPerformance * {
+      margin-bottom: 20px;
+    }
+
+    #queryPerformance > * {
+      margin-bottom: 20px;
+    }
+
+    #projectResults * {
+      margin-bottom: 10px;
+    }
+
+    #projectResults > * {
+      margin-bottom: 10px;
+    }
+
+    /* Styles for background blur */
+    .blurred {
+      filter: blur(4px);
+      pointer-events: none; /* Prevent interaction with the blurred elements */
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-900 p-6">
+  <div id="mainContent" class="max-w-6xl mx-auto space-y-6">
+    <!-- Header -->
+    <h1 class="text-3xl font-bold text-white flex items-center gap-2">
+      <i data-lucide="database" class="w-8 h-8"></i>
+      Database & Project Analyzer
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Query Analyzer Section -->
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+        <h2 class="text-2xl font-semibold mb-4 flex items-center text-white">
+          <i data-lucide="code" class="w-6 h-6 mr-2"></i>
+          Query Analyzer
+        </h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Enter your SQL query
+          </label>
+          <textarea
+            id="queryInput"
+            placeholder="SELECT * FROM users WHERE..."
+            class="w-full h-32 p-3 rounded-md bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          ></textarea>
+        </div>
+        <button
+          onclick="handleQueryAnalysis()"
+          class="w-full py-2 px-4 rounded-md text-white font-medium bg-blue-500 hover:bg-blue-600 flex items-center justify-center"
+        >
+          <i data-lucide="send" class="w-4 h-4 mr-2"></i>
+          Analyze Query
+        </button>
+      </div>
+
+      <!-- Project Analyzer Section -->
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+        <h2 class="text-2xl font-semibold mb-4 flex items-center text-white">
+          <i data-lucide="folder" class="w-6 h-6 mr-2"></i>
+          Project Analyzer
+        </h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Project Description
+          </label>
+          <textarea
+            id="projectDescription"
+            placeholder="Describe your project architecture, technologies, and features..."
+            class="w-full h-32 p-3 rounded-md bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          ></textarea>
+        </div>
+        <button
+          onclick="handleProjectAnalysis()"
+          class="w-full py-2 px-4 rounded-md text-white font-medium bg-blue-500 hover:bg-blue-600 flex items-center justify-center"
+        >
+          <i data-lucide="terminal" class="w-4 h-4 mr-2"></i>
+          Analyze Project
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="bg-gray-800 rounded-lg shadow-xl p-6 hidden">
+      <h2 class="text-2xl font-semibold mb-6 text-white">Analysis Results</h2>
+      
+      <!-- Query Analysis Results -->
+      <div id="queryResults" class="space-y-6 hidden">
+        <div class="bg-gray-700 rounded-lg p-4">
+          <h3 class="text-lg font-medium text-white mb-2">Query Analysis</h3>
+          <div class="space-y-4">
+            <div class="my-4">
+              <p id="queryPerformance" class="text-gray-200 font-medium text-lg leading-relaxed p-4 bg-gray-800 rounded-lg"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Analysis Results -->
+      <div id="projectResults" class="space-y-6 hidden"></div>
+    </div>
+  </div>
+
+  <!-- Loader Section -->
+  <div id="loadingContainer" class="hidden fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-50">
+    <iframe src="loader.html" class="w-32 h-32 border-none"></iframe>
+    <p id="loadingMessage" class="text-white font-medium mt-4">Analyzing...</p>
+  </div>
+  </body>
+</html>

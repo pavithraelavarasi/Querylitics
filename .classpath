@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v9.0">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/postgresql-42.7.5.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/json-20140107.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/servlet-api.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/mysql-connector-j-8.0.33.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-core-shaded-4.17.0.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/netty-all-4.1.59.Final.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-core-4.14.1.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/jnr-posix-3.1.15.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-query-builder-4.17.0.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-mapper-runtime-4.14.0.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-mapper-processor-4.14.1.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/native-protocol-1.5.1.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/config-1.4.1.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/java-driver-shaded-guava-24.1-jre.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/slf4j-simple-1.7.15.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/CassandraJars/slf4j-api-1.7.36.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/okio-1.13.0.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/okhttp-3.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/mongo-java-driver-3.12.8.jar"/>
+	<classpathentry kind="lib" path="/home/pavi-22139/Downloads/mongodb-driver-sync-4.9.1.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

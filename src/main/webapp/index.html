@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DB Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="AnalyzeScript.js" defer></script>
+    <script src="script.js" defer></script>
+    <style>
+      iframe {
+        overflow: scroll;
+        scrollbar-width: none;
+      }
+      .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-in forwards;
+      }
+      .scale-up {
+        transform: scale(0.8);
+        animation: scaleUp 0.5s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
+      @keyframes scaleUp {
+        to { transform: scale(1); }
+      }
+      .loading-text::after {
+        content: '';
+        animation: dots 1.5s infinite;
+      }
+      @keyframes dots {
+        0% { content: '.'; }
+        33% { content: '..'; }
+        66% { content: '...'; }
+      }
+      .tab-link.active {
+        color: #3b82f6; /* blue-500 */
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 2px;
+      }
+      .tab-link.active:hover {
+        color: #3b82f6; /* blue-500 */
+      }
+      /* Consistent cursor and hover styling */
+      a, .tab-link {
+        cursor: pointer;
+      }
+      .tab-link:hover {
+        color: #3b82f6; /* Changed to blue-500 to match active state */
+      }
+      /* Specific styling for dropdown items */
+      .dropdown-item {
+        cursor: pointer;
+      }
+      .dropdown-item:hover {
+        color: #3b82f6; /* blue-500 */
+        background-color: #374151; /* gray-700 */
+      }
+      .action-button.secondary {
+	  position: relative; /* Ensures tooltip positions relative to the button */
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 0.5rem; /* Space between text and icon */
+	}
+	
+	.help-icon {
+	  cursor: pointer; /* Indicates the icon is interactive */
+	}
+	
+	.tooltip {
+	  position: absolute;
+	  bottom: 100%; /* Position above the button */
+	  left: 50%;
+	  transform: translateX(-50%);
+	  background-color: #333; /* Dark background to match your theme */
+	  color: #fff;
+	  padding: 0.75rem;
+	  border-radius: 0.375rem; /* Rounded corners */
+	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	  width: max-content; /* Adjusts to content size */
+	  max-width: 250px; /* Optional: limits width */
+	  z-index: 10; /* Ensures it appears above other elements */
+	  opacity: 0; /* Hidden by default */
+	  transition: opacity 0.2s ease-in-out; /* Smooth fade effect */
+	}
+	
+	.action-button.secondary:hover .tooltip {
+	  opacity: 1; /* Show on hover */
+	}
+	
+	/* Ensure the tooltip is hidden by default */
+	.hidden {
+	  display: block; /* Override hidden class to work with opacity */
+	  visibility: hidden;
+	}
+	
+	.action-button.secondary:hover .tooltip.hidden {
+	  visibility: visible; /* Make visible on hover */
+	}
+	#logo {
+	    width: 220px; /* Reduced size to fit better */
+	    height: auto; /* Maintain aspect ratio */
+	    /* Optional: Add some margin for spacing */
+	    margin-left: 10px;
+	  }
+    </style>
+  </head>
+  <body class="bg-gray-900 min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading">
+      <div class="animate-bounce mb-8">
+        <img src="Primary.svg" alt="logo" width="100">
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-4">Querylitics</h1>
+      <div class="w-48 h-2 bg-gray-800 rounded-full overflow-hidden">
+        <div class="h-full bg-blue-500 animate-progress"></div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 shadow-xl">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between h-20">
+          <div class="flex items-center">
+<!--             <i data-lucide="database" class="h-8 w-8 text-blue-400"></i>
+            <span class="ml-2 text-xl font-semibold text-white">DB Analyzer</span> -->
+            <img src="Querylitics.svg" alt="logo" id="logo">
+          </div>
+          <div class="flex items-center space-x-8">
+            <a href="#" class="flex items-center space-x-1 text-gray-300 transition-colors tab-link" data-page="home">
+              <i data-lucide="home" class="w-5 h-5"></i>
+              <span>Home</span>
+            </a>
+            <!-- Cassandra Playground Dropdown -->
+            <div class="relative">
+              <button id="cassandraDropdown" class="flex items-center space-x-1 text-gray-300 transition-colors focus:outline-none tab-link">
+                <i data-lucide="play" class="w-5 h-5"></i>
+                <span id="dropdownLabel">Cassandra Playground</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200"></i>
+              </button>
+              <div id="cassandraMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                <div class="block px-4 py-2 text-sm text-gray-300 dropdown-item" onclick="cassandra()" data-option="Cassandra Vault">Cassandra Vault</div>
+                <div class="block px-4 py-2 text-sm text-gray-300 dropdown-item" onclick="configure()" data-option="Configure">Configure</div>
+                <div class="block px-4 py-2 text-sm text-gray-300 dropdown-item" onclick="Ring()" data-option="Ring Structure">Ring Structure</div>
+              </div>
+            </div>
+            <a href="#" class="flex items-center space-x-1 text-gray-300 transition-colors tab-link" data-page="analyze">
+              <i data-lucide="database" class="w-5 h-5"></i>
+              <span>Analyzer</span>
+            </a>
+            <div href="#" class="flex items-center space-x-1 text-gray-300 transition-colors tab-link" onclick="converter()">
+              <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+              <span>Query Converter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <div id="contentArea"></div>
+    </main>
+
+    <!-- Generate Data Modal -->
+    <div id="generateModal" class="modal">
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-semibold text-white">Generate Test Data</h2>
+          <button id="closeModal" class="text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <form id="generateForm" class="space-y-6" action="post">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Database Type</label>
+              <select class="w-full bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500" id="dbTypeSelect">
+                <option value="mysql">MySQL</option>
+                <option value="postgresql">PostgreSQL</option>
+                <option value="mongodb">MongoDB</option>
+                <option value="cassandra">Cassandra</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Table Name</label>
+              <input type="text" class="w-full bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500" placeholder="Enter table name" id="tableName">
+            </div>
+          </div>
+          <div id="extraFieldsContainer"></div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Number of Records</label>
+            <input type="number" id="numRecords" class="w-full bg-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500" placeholder="Enter number of records" min="1" value="1000" required>
+          </div>
+          <div class="column-container space-y-4" id="columnContainer">
+            <!-- Column entries will be added here dynamically -->
+          </div>
+          <div class="flex justify-between items-center">
+            <button type="button" id="addColumn" class="text-blue-400 hover:text-blue-300 flex items-center">
+              <i data-lucide="plus-circle" class="w-5 h-5 mr-1"></i>
+              Add Column
+            </button>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+              Generate Data
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Tab highlighting functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.tab-link');
+        
+        tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
+          });
+        });
+
+        // Set initial active tab (Home)
+        const homeTab = document.querySelector('.tab-link[data-page="home"]');
+        if (homeTab) {
+          homeTab.classList.add('active');
+        }
+      });
+    </script>
+  </body>
+</html>

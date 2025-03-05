@@ -1,0 +1,63 @@
+body {
+  background-color: #1a1f2e;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.database-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.database-card:nth-child(1) { animation-delay: 0.1s; }
+.database-card:nth-child(2) { animation-delay: 0.2s; }
+.database-card:nth-child(3) { animation-delay: 0.3s; }
+.database-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Loader overlay styles */
+/* Loader overlay styles */
+#loaderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+ /*  background-color: rgba(0, 0, 0, 0.5); */ /* Semi-transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's above all content */
+  visibility: hidden; /* Hide it by default */
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease;
+}
+
+/* Show the loader when loading */
+#loaderOverlay.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Blur only the main content area when loading */
+#mainContent {
+  filter: blur(8px); /* Apply blur only to the main content */
+ /* pointer-events: none; /* Disable user interaction */
+}
+.query{
+	color:#fff;
+}
+
+
+
+
+/*----------------------------------------------------------------------------------------------------------------------------------*/
+
+

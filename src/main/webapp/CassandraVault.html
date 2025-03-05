@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cassandra Playground</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="CassandraVaultCss.css">
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="min-h-screen p-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center gap-4 mb-10">
+        <i data-lucide="database" class="w-10 h-10 text-blue-400"></i>
+        <h1 class="text-4xl font-bold">Cassandra Playground</h1>
+      </div>
+
+      <div class="mb-10 bg-gray-800 rounded-lg p-8 border border-gray-700">
+        <div class="arrow-container">
+          <button class="arrow-btn" id="prevQuery">←</button>
+          <h3 class="text-2xl font-semibold" id="selectedQueryName">Query</h3>
+          <button class="arrow-btn" id="nextQuery">→</button>
+        </div>
+        
+        <div class="content-box flex items-center">
+          <img id="scenarioIcon" class="scenario-icon" alt="Scenario Icon">
+          <div>
+            <h4 class="text-xl font-semibold mb-2">Scenario</h4>
+            <p id="scenarioText" class="text-gray-300 scenario-content"></p>
+          </div>
+        </div>
+
+        <div class="content-box">
+          <div class="query-header">
+            <span class="text-xl font-medium">Table Creation Query</span>
+          </div>
+          <div class="query-slider">
+            <pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto query-box">
+              <code class="text-gray-300 query-content" id="queryContent"></code>
+            </pre>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            onclick="copyQuery()"
+            class="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition-colors text-lg"
+          >
+            <i data-lucide="copy" class="w-5 h-5"></i>
+            Copy
+          </button>
+          <button
+            onclick="executeQuery()"
+            class="flex items-center gap-2 px-5 py-2 rounded-md bg-blue-500 hover:bg-blue-600 transition-colors text-lg"
+          >
+            <i data-lucide="play" class="w-5 h-5"></i>
+            Execute
+          </button>
+        </div>
+      </div>
+
+      <div id="copyNotification" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg hidden">
+        Query copied to clipboard!
+      </div>
+
+      <div id="resultPopup" class="result-popup">
+        <h3 class="text-xl font-semibold mb-3">Query Result</h3>
+        <pre id="queryResult" class="text-gray-300 text-lg"></pre>
+        <button onclick="closeResultPopup()" class="mt-6 px-5 py-2 bg-blue-500 rounded-md hover:bg-blue-600 text-lg">Close</button>
+      </div>
+
+      <div id="completionPopup" class="completion-popup">
+        <h3 class="text-xl font-semibold mb-3">Congratulations!</h3>
+        <p class="text-gray-300 text-lg">You've completed all 10 queries. Explain your scenario and get the query using Project Analyser.</p>
+        <div class="popup-buttons">
+          <button onclick="closeCompletionPopup()" class="px-5 py-2 bg-gray-700 rounded-md hover:bg-gray-600 text-lg">Later</button>
+          <button onclick="continueFunction()" class="px-5 py-2 bg-blue-500 rounded-md hover:bg-blue-600 text-lg">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="CassandraVaultScript.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  
+</body>
+</html>

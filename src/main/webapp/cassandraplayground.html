@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cassandra Playground</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Removed #machineContainer and #machineContainer.show styles */
+    .popup {
+      animation: popup-fade 2s ease-out forwards;
+    }
+
+    @keyframes popup-fade {
+      0% { opacity: 1; transform: translateY(0); }
+      50% { opacity: 0.7; }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 300px;
+      background-color: #374151;
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 12px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #4B5563;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #EF4444;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #10B981;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    .server-status {
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .server-status.loading {
+      position: relative;
+    }
+
+    .server-status.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin: -20px 0 0 -20px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #10B981;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .server-off-gif {
+      width: 250px;
+      height: 200px;
+      margin: 20px auto;
+      background: url('robo.gif') center/cover;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="max-w-6xl mx-auto p-8">
+    <div class="flex items-center gap-3 mb-6">
+      <i data-lucide="settings" class="w-8 h-8 text-blue-400"></i>
+      <h1 class="text-3xl font-bold">Cassandra Playground - Configuration</h1>
+    </div>
+  
+    <form id="cassandraForm" class="bg-gray-800 rounded-lg p-6">
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Database Name</label>
+          <input
+            type="text"
+            class="w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter database name" id="database" required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Table Name</label>
+          <input
+            type="text"
+            class="w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter table name" id="tableName" required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Replication Factor</label>
+          <input
+            type="number"
+            class="w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter replication factor"
+            min="1" max="3" value="3" required id="number"
+          />
+        </div>
+      </div>
+
+      <div id="columnContainer" class="space-y-4">
+        <div class="column-entry grid grid-cols-2 gap-4 relative">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Column Name</label>
+            <input
+              type="text"
+              class="column-name w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter column name" required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Data Type</label>
+            <select class="column-type w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option value="int">Integer</option>
+              <option value="varchar">String</option>
+              <option value="date">Date</option>
+              <option value="boolean">Boolean</option>
+              <option value="float">Float</option>
+            </select>
+          </div>
+          <button type="button" class="delete-column absolute -right-8 top-8 text-gray-400 hover:text-red-400 hidden">
+            <i data-lucide="x-circle" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <button type="button" id="addColumn" class="text-blue-400 hover:text-blue-300 flex items-center gap-1">
+          <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Column
+        </button>
+        <div class="flex items-center">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors font-bold">
+            Generate Data
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Removed show class logic, always visible -->
+    <div id="machineContainer" class="bg-gray-800 rounded-lg p-6 mb-8 mt-6">
+      <div class="flex items-center gap-3 mb-6">
+        <i data-lucide="network" class="w-6 h-6 text-green-400"></i>
+        <h2 class="text-xl font-bold">Cluster</h2>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div class="bg-gray-700 rounded-lg p-6 border border-gray-600 min-h-[200px]">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-bold">Node-1</h3>
+              <p class="text-sm text-gray-400 font-bold mt-1">IP: 10.51.25.165</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="server-toggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="server-status text-gray-400">
+            <p class="mb-2 font-bold">Status: Ready</p>
+            <p class="font-bold">Records: 0</p>
+          </div>
+        </div>
+        <div class="bg-gray-700 rounded-lg p-6 border border-gray-600 min-h-[200px]">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-bold">Node-2</h3>
+              <p class="text-sm text-gray-400 font-bold mt-1">IP: 10.51.24.73</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="server-toggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="server-status text-gray-400">
+            <p class="mb-2 font-bold">Status: Ready</p>
+            <p class="font-bold">Records: 0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-700 rounded-lg p-6 border border-gray-600 min-h-[200px] mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex-1">
+            <h3 class="text-lg font-bold">Node-3</h3>
+            <p class="text-sm text-gray-400 font-bold mt-1">IP: 10.51.24.247</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" class="server-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="server-status text-gray-400">
+          <p class="mb-2 font-bold">Status: Ready</p>
+          <p class="font-bold">Records: 0</p>
+        </div>
+      </div>
+
+      <div class="flex justify-center">
+        <button type="button" id="fetchData" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md transition-colors font-bold">
+          Fetch Data from All Nodes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="cassandraplay.js"></script>
+</body>
+</html>

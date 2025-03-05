@@ -1,0 +1,450 @@
+:root {
+    --primary-color: #60a5fa;
+    --primary-hover: #3b82f6;
+    --bg-color: #111827;
+    --surface-color: #1f2937;
+    --text-color: #f9fafb;
+    --text-secondary: #9ca3af;
+    --border-color: #374151;
+    --node-size: 32px;
+    --ring-size: 600px;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+  }
+  
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+  }
+  
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+  
+  header p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+  }
+  
+  main {
+    display: flex;
+    flex-direction: row; /* Side-by-side layout */
+    justify-content: space-between;
+    gap: 3rem; /* Add spacing between the sections */
+  }
+
+  .left-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Stack the ring and form vertically */
+    gap: 2rem; /* Add space between the ring and the form */
+    flex: 2; /* Take more space compared to data distribution */
+  }
+  
+  
+  .visualization {
+    flex: 1; /* Allow the visualization to take up available space */
+  }
+  
+  .ring {
+    position: relative;
+    width: var(--ring-size);
+    height: var(--ring-size);
+  }
+  
+  .ring-circle {
+    position: absolute;
+    inset: 0;
+    border: 4px solid var(--border-color);
+    border-radius: 50%;
+  }
+  
+  .node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .node:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  .node:hover .node-tooltip {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+  
+  .node svg {
+    width: var(--node-size);
+    height: var(--node-size);
+  }
+  
+  .node.active svg {
+    color: var(--primary-color);
+  }
+  
+  .node.inactive svg {
+    color: #ef4444;
+  }
+  
+  .node-label {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .node-token {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  
+  .node-tooltip {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translate(-50%, -100%) scale(0.95);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    min-width: 200px;
+    opacity: 0;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+  
+  .node-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .node-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+  
+  .node-tooltip-data {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .node-tooltip-data:empty::after {
+    content: 'No data stored';
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  
+  .data-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .data-item.initial {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  
+  .data-item.appear {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  
+  .data-item.move-to-node {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  
+.data-item.replicate {
+  background-color: var(--primary-hover); /* Darker shade for replicas */
+  transform: translate(-50%, -50%) scale(0.8); /* Start smaller at primary node */
+  opacity: 1; /* Fully visible during replication */
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.3s ease;
+}
+
+
+.data-item.replicated {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.8; /* Slightly faded to indicate replica */
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.5); /* Subtle glow */
+}
+
+.node.replication-target {
+  animation: pulse 1s infinite cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.node.replication-target svg {
+  color: var(--primary-hover); /* Darker blue for distinction */
+}
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(96, 165, 250, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(96, 165, 250, 0);
+    }
+  }
+  
+  .node.highlight {
+    animation: pulse 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .controls {
+    width: 80%;
+    max-width: 28rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: auto;
+  }
+  
+  .data-input {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .data-input input {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+  }
+  
+  .data-input input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+  }
+  
+  .data-input input::placeholder {
+    color: var(--text-secondary);
+  }
+  
+  .data-input button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .data-input button:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .replication-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .replication-control label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  
+  .replication-control input {
+    width: 100%;
+    accent-color: var(--primary-color);
+  }
+  
+  .reset-button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .reset-button:hover {
+    background-color: var(--bg-color);
+  }
+  
+  .data-distribution {
+    max-height: 600px; /* Increased height for better visibility */
+    overflow-y: auto; /* Enable scrolling when content exceeds */
+    padding: 2rem; /* More padding for spacing */
+    display: flex;
+    flex-direction: column;
+    margin-top: 5rem;
+    gap: 1.5rem; /* Space between node data boxes */
+    background-color: var(--surface-color);
+    border-radius: 0.75rem; /* Larger rounding for smoother edges */
+    box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.3); /* More prominent shadow */
+    width: 100%; /* Full width inside parent */
+    max-width: 500px; /* Limit the width to avoid it looking too stretched */
+  }
+  
+  
+  .data-distribution h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+  
+  .node-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .node-data {
+    padding: 1.25rem; /* More padding for each box */
+    border-radius: 0.5rem;
+    background-color: rgba(96, 165, 250, 0.15); /* Light background to highlight nodes */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Soft shadow for definition */
+  }
+  
+  .node-data.active {
+    background-color: rgba(96, 165, 250, 0.1);
+  }
+  
+  .node-data.inactive {
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  .node-data h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color); /* Keep title color consistent */
+  }
+
+  .node-data-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Space between each data item */
+  }
+
+  .data-distribution::-webkit-scrollbar {
+    width: 10px; /* Slightly thicker scrollbar */
+  }
+  
+  .data-distribution::-webkit-scrollbar-track {
+    background: var(--surface-color); /* Matches the box's background */
+    border-radius: 4px;
+  }
+  
+  .data-distribution::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color); /* Thumb stands out with the primary color */
+    border-radius: 6px;
+  }
+  
+  .data-distribution::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-hover); /* Darker color when hovered */
+  }
+
+
+/* Glow effect for data item appearance */
+.glow-effect {
+  animation: glowEffect 0.6s ease-in-out;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Ring lighting effect */
+.ring-lighting {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 20px rgba(96, 165, 250, 0.5); /* Using primary-color's RGB */
+  animation: ringGlow 1s infinite alternate;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Glowing trail for replica data items */
+.glow-trail {
+  animation: glowTrail 0.8s ease-out;
+  box-shadow: 0 0 15px var(--primary-hover);
+}
+
+/* Dynamic shadow during replication */
+.dynamic-shadow {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  transition: filter 0.6s ease;
+}
+
+/* Keyframes for lighting effects */
+@keyframes glowEffect {
+  0% { box-shadow: 0 0 5px rgba(96, 165, 250, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(96, 165, 250, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+}
+
+@keyframes ringGlow {
+  0% { box-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+  100% { box-shadow: 0 0 25px rgba(96, 165, 250, 0.8); }
+}
+
+@keyframes glowTrail {
+  0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.7); }
+  100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
+}
+  
+  
+  
+  
